@@ -1,0 +1,30 @@
+post_install() {
+  cat <<'MSG'
+listello is installed. Nothing starts by itself. To use it:
+
+  sudo systemctl enable --now listello-core.socket
+
+then open "listello" from the application menu. The first time, it asks whether to start
+listello every time you log in. Stopping it (in its window or from the tray icon) gives the
+Touch Bar back to the keys the Mac draws itself.
+
+Configuration: copy /usr/share/listello/config.toml to /etc/listello/config.toml and edit that
+copy. /usr/share/listello/config.example-dock.toml is a fuller example with a Dock.
+MSG
+}
+
+post_upgrade() {
+  cat <<'MSG'
+listello was upgraded. Reload the system units, then stop the renderer; it starts again by
+itself the next time listello is started:
+
+  sudo systemctl daemon-reload
+  sudo udevadm control --reload
+  sudo systemctl stop listello-core
+  sudo systemctl enable --now listello-core.socket
+MSG
+}
+
+pre_remove() {
+  systemctl disable --now listello-core.socket >/dev/null 2>&1 || true
+}

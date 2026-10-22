@@ -1,0 +1,18 @@
+[package]
+name = "listello-sim"
+description = "A Touch Bar-shaped window on a desktop: the simulator binary (D10)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+# Cairo's toy font API only — fontconfig is `listello-core`'s business and does not exist on
+# the Mac, which is the one machine this binary has to run on.
+cairo-rs.workspace = true
+chrono.workspace = true
+listello-protocol.workspace = true
+listello-ui.workspace = true
+listello-surface = { workspace = true, features = ["simulator"] }
+winit.workspace = true

@@ -1,0 +1,24 @@
+[package]
+name = "listello-ui"
+description = "Widgets, layout and the surface-agnostic shell: everything above the pixel line (D3)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+# NOTHING LINUX-ONLY BELONGS HERE.
+#
+# This crate has to build, test and gate on macOS -- that is the whole reason it is not
+# part of listello-core (D10 addendum). `input-linux`, `udev`, `drm`, `input` and `nix` are all
+# out, permanently: `input-linux-sys` cannot even find the Linux uapi headers on macOS. If a
+# phase seems to need one of them, the code belongs in listello-core and the phase is wrong.
+[dependencies]
+listello-protocol.workspace = true
+listello-surface.workspace = true
+cairo-rs.workspace = true
+chrono.workspace = true
+serde.workspace = true
+toml.workspace = true
+
+[dev-dependencies]
+librsvg-rebind.workspace = true

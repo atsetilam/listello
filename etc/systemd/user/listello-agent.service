@@ -1,0 +1,19 @@
+[Unit]
+Description=listello session agent
+Documentation=https://github.com/atsetilam/listello
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+ExecStart=/usr/bin/listello-agent
+Restart=on-failure
+RestartSec=2
+# SIGUSR2 means "stop": the agent tells the renderer to give the Touch Bar back to the T2's keys
+# and exits. The tray, started by the agent, is in this unit too and goes with it.
+KillSignal=SIGUSR2
+TimeoutStopSec=10
+
+# Nothing enables this: a user who wants listello at login ticks "Start at login" in its
+# settings (or answers the first-start question), which runs `systemctl --user enable`.
+[Install]
+WantedBy=graphical-session.target

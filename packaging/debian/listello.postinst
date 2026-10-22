@@ -1,0 +1,26 @@
+#!/bin/sh
+set -e
+
+if [ "$1" = configure ]; then
+    if [ -z "$2" ]; then
+        cat <<'MSG'
+listello is installed. Nothing starts by itself. To use it:
+
+  sudo systemctl enable --now listello-core.socket
+
+then open "listello" from the application menu. The first time, it asks whether to start
+listello every time you log in.
+MSG
+    else
+        cat <<'MSG'
+listello was upgraded. Reload the system units, then stop the renderer; it starts again by
+itself the next time listello is started:
+
+  sudo systemctl daemon-reload
+  sudo udevadm control --reload
+  sudo systemctl stop listello-core
+MSG
+    fi
+fi
+
+#DEBHELPER#

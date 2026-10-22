@@ -1,0 +1,24 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: listello
+Source: https://github.com/atsetilam/listello
+
+Files: *
+Copyright: The Asahi Linux Contributors (tiny-dfr), and listello's authors
+License: MIT
+
+Files: share/listello/*.svg
+Copyright: Google (material-design-icons), with edits by kekrby
+License: Apache-2.0
+
+Files: share/listello/cc_*.svg share/listello/pin.svg share/listello/pin_off.svg share/listello/network_*.svg
+Copyright: Cole Bemis 2013-2022, Lucide Contributors 2022
+License: ISC
+
+License: MIT
+ The MIT licence is in /usr/share/doc/listello/LICENSE.
+
+License: Apache-2.0
+ The Apache licence, version 2.0, is in /usr/share/doc/listello/LICENSE.material.
+
+License: ISC
+ The ISC licence is in /usr/share/doc/listello/LICENSE.lucide.

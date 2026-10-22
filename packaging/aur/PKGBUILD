@@ -1,0 +1,41 @@
+# AUR entry: builds listello from the latest commit on the default branch.
+# The same install message as packaging/arch/listello.install is kept here, since the AUR
+# takes this directory on its own.
+pkgname=listello-git
+pkgver=0.1.0
+pkgrel=1
+pkgdesc='Widgets and a Dock for the MacBook Pro Touch Bar, on Linux (a tiny-dfr fork)'
+arch=('x86_64' 'aarch64')
+url='https://github.com/atsetilam/listello'
+license=('MIT' 'Apache-2.0')
+depends=('cairo' 'dbus' 'fontconfig' 'freetype2' 'inter-font' 'librsvg' 'libinput' 'libpipewire' 'systemd-libs'
+         'qt6-base' 'qt6-declarative' 'kirigami' 'qqc2-desktop-style')
+makedepends=('cargo' 'clang' 'git' 'pkgconf')
+# listello-core replaces tiny-dfr and ships the same udev rules and unit-file names under its
+# own names; having both installed would start two daemons on one panel.
+provides=('listello')
+conflicts=('listello' 'tiny-dfr')
+install=listello.install
+options=('!lto')
+source=("git+$url.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd listello
+  printf '0.1.0.r%s.g%s' "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd listello
+  make fetch
+}
+
+build() {
+  cd listello
+  make build CARGO_TARGET_DIR="$srcdir/target"
+}
+
+package() {
+  cd listello
+  make install DESTDIR="$pkgdir" CARGO_TARGET_DIR="$srcdir/target" LICENSEDIR="/usr/share/licenses/$pkgname"
+}

@@ -1,0 +1,175 @@
+# An example layout close to Pock's default, the first test case for listello's config (D8),
+# not a default. Copy it to /etc/listello/config.toml to try it.
+#
+# Left to right: the Dock (pinned apps first, then every other window), folders, the control
+# centre, wifi, battery, date and time. Holding Fn swaps the whole strip for F1-F12.
+#
+# Icons are named with dashes; the file is the same name with underscores in
+# /usr/share/listello (`trash-full` is `trash_full.svg`). A missing icon shows the label.
+# Key names are the ones the input-linux crate accepts ("F5", "VolumeUp"), not KEY_VOLUMEUP.
+
+[strip]
+gap = 12.0
+# Rest a finger this long on an open app (or a window in its row of windows) to wiggle it and
+# bring up its close, minimise and maximise buttons; they go away after controls_seconds, or
+# at a touch anywhere else.
+hold_seconds = 0.5
+controls_seconds = 5.0
+# Pictures of the windows in an app's row of windows: "off", "snapshots" or "live" (KDE Plasma).
+# preview_style: "fill" (a band through the middle, behind the title), "whole" or "stretch".
+window_previews = "live"
+preview_style = "fill"
+
+[[widget]]
+kind = "dock"
+# The starting set. Once an app is pinned or unpinned from the Touch Bar (hold it, tap the
+# pin), each user's own list in ~/.config/listello/pins.toml is used instead.
+pinned = ["org.kde.dolphin", "google-chrome", "org.kde.konsole"]
+flex = 1.0
+
+[[widget]]
+kind = "separator"
+
+# Screenshots, Downloads, Trash. `path` is what a tap opens; Trash is also watched, and wears
+# its empty icon while there is nothing in it.
+[[widget]]
+kind = "folders"
+# 92 per folder: the Dock's own spacing, so the two rows of icons read as one.
+width = 276.0
+
+[[widget.folder]]
+key = "screenshots"
+path = "~/Pictures/Screenshots"
+label = "Shots"
+icon = "folder-screenshots"
+
+[[widget.folder]]
+key = "downloads"
+path = "~/Downloads"
+label = "Down"
+icon = "folder-downloads"
+
+[[widget.folder]]
+key = "trash"
+path = "trash:/"
+label = "Trash"
+icon = "bin-full"
+empty_icon = "bin-empty"
+
+# Buttons, not sliders: lock, brightness down and up, mute, volume down and up.
+[[widget]]
+kind = "control_center"
+width = 684.0
+
+[[widget.button]]
+icon = "cc-lock"
+label = "Lock"
+system = "lock_session"
+
+[[widget.button]]
+icon = "cc-brightness-down"
+label = "Dim"
+keys = ["BrightnessDown"]
+
+[[widget.button]]
+icon = "cc-brightness-up"
+label = "Bright"
+keys = ["BrightnessUp"]
+
+[[widget.button]]
+icon = "cc-volume-mute"
+label = "Mute"
+keys = ["Mute"]
+
+[[widget.button]]
+icon = "cc-volume-down"
+label = "Vol-"
+keys = ["VolumeDown"]
+
+[[widget.button]]
+icon = "cc-volume-up"
+label = "Vol+"
+keys = ["VolumeUp"]
+
+[[widget]]
+kind = "network"
+width = 56.0
+
+[[widget]]
+kind = "battery"
+# Room for "100%" and the bar side by side; a narrower slot drops the bar at full charge.
+width = 112.0
+
+# Day, date, time. `format` is strftime's: "%a %-d %B %H:%M" is "Thu 22 October 20:48";
+# "%d/%m/%y %H:%M" is "22/10/26 20:48"; "%B %-d %Y %I:%M %p" is "October 22 2026 08:48 PM".
+# Day and month names follow [general] language; `locale = "it_IT"` here would override it
+# for this clock only.
+[[widget]]
+kind = "clock"
+format = "%a %-d %B %H:%M"
+align = "start"
+# No width: as wide as the date it shows, with the Dock taking whatever is left.
+
+[[fn_widget]]
+kind = "button"
+label = "F1"
+keys = ["F1"]
+
+[[fn_widget]]
+kind = "button"
+label = "F2"
+keys = ["F2"]
+
+[[fn_widget]]
+kind = "button"
+label = "F3"
+keys = ["F3"]
+
+[[fn_widget]]
+kind = "button"
+label = "F4"
+keys = ["F4"]
+
+[[fn_widget]]
+kind = "button"
+label = "F5"
+keys = ["F5"]
+
+[[fn_widget]]
+kind = "button"
+label = "F6"
+keys = ["F6"]
+
+[[fn_widget]]
+kind = "button"
+label = "F7"
+keys = ["F7"]
+
+[[fn_widget]]
+kind = "button"
+label = "F8"
+keys = ["F8"]
+
+[[fn_widget]]
+kind = "button"
+label = "F9"
+keys = ["F9"]
+
+[[fn_widget]]
+kind = "button"
+label = "F10"
+keys = ["F10"]
+
+[[fn_widget]]
+kind = "button"
+label = "F11"
+keys = ["F11"]
+
+[[fn_widget]]
+kind = "button"
+label = "F12"
+keys = ["F12"]
+
+[core]
+adaptive_brightness = true
+active_brightness = 128

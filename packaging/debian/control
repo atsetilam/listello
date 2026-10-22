@@ -1,0 +1,47 @@
+Source: listello
+Section: utils
+Priority: optional
+Maintainer: Giulio Malitesta <atsetilam@gmail.com>
+# Rust 1.92 or newer is also needed; Debian 13's is older, so it is not listed here (see
+# docs/INSTALL.md).
+Build-Depends:
+ debhelper-compat (= 13),
+ clang,
+ libclang-dev,
+ pkgconf,
+ qt6-base-dev,
+ qt6-declarative-dev,
+ libcairo2-dev,
+ libdbus-1-dev,
+ libfontconfig-dev,
+ libfreetype-dev,
+ libinput-dev,
+ libpipewire-0.3-dev,
+ librsvg2-dev,
+ libudev-dev,
+Standards-Version: 4.7.0
+Rules-Requires-Root: no
+Homepage: https://github.com/atsetilam/listello
+
+Package: listello
+Architecture: amd64 arm64
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+ fonts-inter,
+ qml6-module-org-kde-desktop,
+ qml6-module-org-kde-kirigami,
+ qml6-module-qtquick,
+ qml6-module-qtquick-controls,
+ qml6-module-qtquick-layouts,
+ qml6-module-qtquick-templates,
+ qml6-module-qtquick-window,
+Conflicts: tiny-dfr
+Description: Widgets and a Dock for the MacBook Pro Touch Bar
+ listello draws function keys, media keys, widgets and an app Dock on the Touch Bar of
+ an Intel (T2) or Apple Silicon MacBook Pro, and has a settings window to choose what it
+ shows. It is a fork of tiny-dfr and replaces it.
+ .
+ Installing the package turns nothing on. The administrator starts the system side with
+ "systemctl enable --now listello-core.socket"; each user then starts listello from the
+ application menu, and chooses there whether it starts at login.

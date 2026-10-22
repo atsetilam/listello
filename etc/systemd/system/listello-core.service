@@ -1,0 +1,31 @@
+[Unit]
+Description=listello Touch Bar daemon
+After=systemd-user-sessions.service getty@tty1.service plymouth-quit.service systemd-logind.service dev-listello_display.device dev-listello_backlight.device dev-listello_display_backlight.device
+Wants=dev-listello_display_backlight.device
+
+[Service]
+# On a T2 MacBook the renderer is started by the agent connecting to listello-core.socket, not
+# at boot: it selects USB configuration 2 (the panel is handed to appletbdrm) before it starts
+# and configuration 1 (the T2's own keys) after it ends. The devices only exist once 2 is
+# selected, so this unit cannot be bound to them. The `+` is for /sys, read-only in here.
+ExecStartPre=+/usr/bin/listello-core --panel-mode 2
+ExecStart=/usr/bin/listello-core
+ExecStopPost=+/usr/bin/listello-core --panel-mode after-stop
+# Leaving on its own (no agent left) is a success and is not restarted. 75 is "reload": start
+# again at once, with the panel left alone.
+Restart=on-failure
+RestartForceExitStatus=75
+SuccessExitStatus=75
+
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateIPC=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=strict
+RestrictAddressFamilies=AF_UNIX AF_NETLINK
+RestrictNamespaces=true
+RestrictSUIDSGID=true

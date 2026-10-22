@@ -1,0 +1,34 @@
+# Builds listello from the checkout this file sits in (packaging/arch/ inside the repository),
+# not from a downloaded archive: run `makepkg -si` in this directory.
+pkgname=listello
+pkgver=0.1.0
+pkgrel=21
+pkgdesc='Widgets and a Dock for the MacBook Pro Touch Bar, on Linux (a tiny-dfr fork)'
+arch=('x86_64' 'aarch64')
+url='https://github.com/atsetilam/listello'
+license=('MIT' 'Apache-2.0')
+depends=('cairo' 'dbus' 'fontconfig' 'freetype2' 'inter-font' 'librsvg' 'libinput' 'libpipewire' 'systemd-libs'
+         'qt6-base' 'qt6-declarative' 'kirigami' 'qqc2-desktop-style')
+makedepends=('cargo' 'clang' 'pkgconf')
+# listello-core replaces tiny-dfr and ships the same udev rules and unit-file names under its
+# own names; having both installed would start two daemons on one panel.
+conflicts=('tiny-dfr')
+install=listello.install
+options=('!lto')
+
+_root="$startdir/../.."
+
+prepare() {
+  cd "$_root"
+  make fetch
+}
+
+build() {
+  cd "$_root"
+  make build CARGO_TARGET_DIR="$srcdir/target"
+}
+
+package() {
+  cd "$_root"
+  make install DESTDIR="$pkgdir" CARGO_TARGET_DIR="$srcdir/target" LICENSEDIR="/usr/share/licenses/$pkgname"
+}

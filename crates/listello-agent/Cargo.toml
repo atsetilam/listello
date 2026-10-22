@@ -1,0 +1,23 @@
+[package]
+name = "listello-agent"
+description = "listello's session agent: window lists, D-Bus status, icons and actions, running as the user (D11)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+listello-protocol.workspace = true
+listello-ui.workspace = true
+
+anyhow.workspace = true
+cairo-rs.workspace = true
+freedesktop-icons.workspace = true
+librsvg-rebind.workspace = true
+nix = { workspace = true, features = ["poll"] }
+serde.workspace = true
+toml.workspace = true
+wayland-client = "0.31"
+wayland-protocols-plasma = { version = "0.3", features = ["client"] }
+dbus = { version = "0.9.12", features = ["stdfd"] }
+pipewire = "0.10.1"

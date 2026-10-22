@@ -1,0 +1,17 @@
+# On a T2 MacBook (05ac:8302) nothing here starts listello-core or selects USB configuration 2:
+# the renderer does both itself when a user's agent connects (listello-core.service), and gives
+# the panel back to the T2's own keys when it leaves. The two input rules below are Apple Silicon's.
+
+SUBSYSTEM=="input", ATTR{name}=="MacBookPro17,1 Touch Bar", TAG+="systemd", ENV{SYSTEMD_WANTS}="listello-core.service"
+SUBSYSTEM=="input", ATTR{name}=="Mac14,7 Touch Bar", TAG+="systemd", ENV{SYSTEMD_WANTS}="listello-core.service"
+
+SUBSYSTEM=="drm", KERNEL=="card[0-9]*", DRIVERS=="adp|appletbdrm", TAG+="systemd", ENV{SYSTEMD_ALIAS}="/dev/listello_display"
+
+SUBSYSTEM=="backlight", KERNEL=="appletb_backlight", DRIVERS=="hid-appletb-bl", TAG+="systemd", ENV{SYSTEMD_ALIAS}="/dev/listello_backlight"
+SUBSYSTEM=="backlight", KERNEL=="228200000.display-pipe.0", DRIVERS=="panel-summit", TAG+="systemd", ENV{SYSTEMD_ALIAS}="/dev/listello_backlight"
+SUBSYSTEM=="backlight", KERNELS=="228600000.dsi.0", DRIVERS=="panel-summit", TAG+="systemd", ENV{SYSTEMD_ALIAS}="/dev/listello_backlight"
+
+SUBSYSTEM=="backlight", KERNEL=="apple-panel-bl", TAG+="systemd", ENV{SYSTEMD_ALIAS}="/dev/listello_display_backlight"
+SUBSYSTEM=="backlight", KERNEL=="gmux_backlight", TAG+="systemd", ENV{SYSTEMD_ALIAS}="/dev/listello_display_backlight"
+SUBSYSTEM=="backlight", KERNEL=="intel_backlight", TAG+="systemd", ENV{SYSTEMD_ALIAS}="/dev/listello_display_backlight"
+SUBSYSTEM=="backlight", KERNEL=="acpi_video0", TAG+="systemd", ENV{SYSTEMD_ALIAS}="/dev/listello_display_backlight"

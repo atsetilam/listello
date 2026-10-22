@@ -1,5 +1,5 @@
 {
-  description = "The most basic dynamic function row daemon possible";
+  description = "listello: a widget manager for the MacBook Pro Touch Bar, on Linux";
   inputs = { nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11"; };
   outputs = { self, nixpkgs }:
     let
@@ -11,8 +11,8 @@
         let pkgs = pkgsFor.${system};
         in {
           default = pkgs.rustPlatform.buildRustPackage {
-            pname = "tiny-dfr";
-            version = "0.3.5";
+            pname = "listello";
+            version = "0.1.0";
             src = ./.;
             cargoLock = { lockFile = ./Cargo.lock; };
             nativeBuildInputs = [ pkgs.pkg-config ];
@@ -29,9 +29,9 @@
             ];
 
             postConfigure = ''
-              substituteInPlace etc/systemd/system/tiny-dfr.service \
+              substituteInPlace etc/systemd/system/listello-core.service \
                   --replace-fail /usr/bin $out/bin
-              substituteInPlace src/*.rs --replace-quiet /usr/share $out/share
+              substituteInPlace crates/*/src/*.rs --replace-quiet /usr/share $out/share
             '';
 
             postInstall = ''

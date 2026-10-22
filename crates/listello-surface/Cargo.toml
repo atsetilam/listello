@@ -1,0 +1,30 @@
+[package]
+name = "listello-surface"
+description = "Draw commands in, pixels out: the Surface abstraction and its backends (D10)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[features]
+# Off by default on purpose: the daemon that drives the real panel must not link a window
+# stack, an X11 client library or a Wayland client library. `listello-sim` turns it on;
+# `listello-core` never does.
+simulator = ["dep:winit", "dep:softbuffer"]
+
+[dependencies]
+anyhow.workspace = true
+# The shared software rasteriser (see src/raster.rs). Cross-platform on purpose: this is what
+# lets the simulator and the golden-image harness run on macOS.
+cairo-rs.workspace = true
+# Rasterises the packaged SVG icons (src/packaged.rs).
+librsvg-rebind.workspace = true
+
+# Behind the `simulator` feature only. See [features] above.
+winit = { workspace = true, optional = true }
+softbuffer = { workspace = true, optional = true }
+
+# The DRM backend is Linux-only. Everything above the Surface line must build
+# without it -- that is what lets the simulator run on macOS (D10).
+[target.'cfg(target_os = "linux")'.dependencies]
+drm.workspace = true

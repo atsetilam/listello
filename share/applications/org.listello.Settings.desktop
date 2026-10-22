@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=listello
+GenericName=Touch Bar, reimagined
+GenericName[it]=Touch Bar, reimmaginata
+Comment=Choose what the Touch Bar shows
+Comment[it]=Scegli cosa mostra la Touch Bar
+Exec=/usr/bin/listello-settings
+Icon=listello
+Categories=Qt;KDE;Settings;HardwareSettings;
+Keywords=listello;touchbar;touch bar;fn;dock;
+Keywords[it]=listello;touchbar;touch bar;fn;dock;

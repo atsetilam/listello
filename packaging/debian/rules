@@ -1,0 +1,24 @@
+#!/usr/bin/make -f
+
+# The build downloads the crates in Cargo.lock, so it needs the network.
+%:
+	dh $@
+
+override_dh_auto_configure:
+	$(MAKE) fetch
+
+override_dh_auto_build:
+	$(MAKE) build
+
+override_dh_auto_test:
+
+override_dh_auto_install:
+	$(MAKE) install DESTDIR=$(CURDIR)/debian/listello LICENSEDIR=/usr/share/doc/listello
+
+# Nothing is enabled, started, stopped or restarted for anybody: the administrator enables
+# listello-core.socket, and each user starts the agent from the settings window.
+override_dh_installsystemd:
+	dh_installsystemd --no-enable --no-start --no-stop-on-upgrade --no-restart-after-upgrade
+
+override_dh_installsystemduser:
+	dh_installsystemduser --no-enable

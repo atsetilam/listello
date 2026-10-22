@@ -1,0 +1,11 @@
+[package]
+name = "listello-protocol"
+description = "The message enum shared by listello-core and listello-agent, and the wire format between them (D3, D11)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+postcard.workspace = true
+serde.workspace = true

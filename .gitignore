@@ -3,3 +3,10 @@
 .idea/
 
 *.swp
+
+# Output of `cargo run -p listello-surface --example strip`.
+/strip.png
+/strip-panel.png
+
+# Written by the Qt build into the settings crate, with this machine's paths.
+.qmlls.ini

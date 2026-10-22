@@ -1,32 +1,58 @@
-[package]
-name = "tiny-dfr"
-version = "0.3.7"
+[workspace]
+resolver = "2"
+members = [
+    "crates/listello-core",
+    "crates/listello-agent",
+    "crates/listello-protocol",
+    "crates/listello-surface",
+    "crates/listello-ui",
+    "crates/listello-sim",
+    "crates/listello-settings",
+]
+
+[workspace.package]
+version = "0.1.0"
 edition = "2021"
 license = "MIT AND Apache-2.0"
-description = "The most basic dynamic function row daemon possible"
-homepage = "https://github.com/AsahiLinux/tiny-dfr"
-repository = "https://github.com/AsahiLinux/tiny-dfr.git"
+repository = "https://github.com/atsetilam/listello"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+# One place for versions, so the four crates cannot drift apart.
+# Everything below the marker is inherited from tiny-dfr's manifest.
+[workspace.dependencies]
+listello-protocol = { path = "crates/listello-protocol" }
+listello-surface = { path = "crates/listello-surface" }
+listello-ui = { path = "crates/listello-ui" }
 
-[dependencies]
-cairo-rs = { version = "0.22", default-features = false, features = ["freetype", "png"] }
-librsvg-rebind = "0.3"
-drm = "0.14"
+# The D11 wire codec: compact, non-self-describing, no schema evolution — which is the
+# point, since both binaries ship together and a version mismatch must be refused, not
+# tolerated. See listello-protocol's `wire` module.
+postcard = { version = "1", features = ["use-std"] }
+
+# The simulator's window and its pixel path. Optional everywhere: `listello-surface`'s
+# `simulator` feature gates them, `listello-sim` turns it on, and `listello-core` never does —
+# the daemon that drives the real panel must not link a window stack (D10 addendum).
+# winit is driven through `pump_app_events`, so our loop keeps the main thread (D3).
+winit = "0.30"
+softbuffer = "0.4"
+
+# --- from tiny-dfr (https://github.com/AsahiLinux/tiny-dfr) ---
 anyhow = "1"
+cairo-rs = { version = "0.22", default-features = false, features = ["freetype", "png"] }
+chrono = { version = "0.4", features = ["unstable-locales"] }
+drm = "0.14"
+freedesktop-icons = "0.4.0"
+freetype-rs = "0.38"
 input = "0.9"
-libc = "0.2"
 input-linux = { version = "0.7", features = ["serde"] }
 input-linux-sys = "0.9"
-nix = { version = "0.29", features = ["event", "signal", "inotify"] }
+libc = "0.2"
+librsvg-rebind = "0.3"
+nix = { version = "0.29", features = ["event", "signal", "inotify", "socket"] }
 privdrop = "0.5.3"
+rand = "0.8"
 serde = { version = "1", features = ["derive"] }
 toml = "0.8"
-rand = "0.8"
-freetype-rs = "0.38"
-freedesktop-icons = "0.4.0"
-chrono = { version = "0.4", features = ["unstable-locales"] }
 udev = "0.9"
 
-[build-dependencies]
-pkg-config = "0.3"
+[profile.release]
+lto = "thin"
