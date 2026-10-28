@@ -24,8 +24,9 @@ jobs:
           apt-get update -qq
           DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends \
             build-essential ca-certificates curl git pkg-config \
-            libcairo2-dev libfontconfig1-dev libfreetype-dev libgdk-pixbuf-2.0-dev \
-            libglib2.0-dev libinput-dev librsvg2-dev libudev-dev
+            clang libclang-dev qt6-base-dev qt6-declarative-dev \
+            libcairo2-dev libdbus-1-dev libfontconfig1-dev libfreetype-dev libgdk-pixbuf-2.0-dev \
+            libglib2.0-dev libinput-dev libpipewire-0.3-dev librsvg2-dev libudev-dev
       - uses: actions/checkout@v4
       - name: Install Rust
         run: |
@@ -56,8 +57,9 @@ jobs:
             apt-get update -qq
             DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends \
               build-essential ca-certificates curl pkg-config \
-              libcairo2-dev libfontconfig1-dev libfreetype-dev libgdk-pixbuf-2.0-dev \
-              libglib2.0-dev libinput-dev librsvg2-dev libudev-dev
+              clang libclang-dev qt6-base-dev qt6-declarative-dev \
+              libcairo2-dev libdbus-1-dev libfontconfig1-dev libfreetype-dev libgdk-pixbuf-2.0-dev \
+              libglib2.0-dev libinput-dev libpipewire-0.3-dev librsvg2-dev libudev-dev
             curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs \
               | sh -s -- -y --profile minimal --no-modify-path
             . "$HOME/.cargo/env"
@@ -66,11 +68,14 @@ jobs:
 
   # The simulator (M1) has to build on macOS -- it shows the strip on a machine that has not
   # moved to Linux yet (D10). Nothing Linux-only may leak above the Surface line, and this job is what proves it.
+  # The agent is not built here: it talks to KWin, PipeWire and D-Bus, so it is Linux-only.
   macos:
     name: build (macOS, host-agnostic crates)
     runs-on: macos-latest
     steps:
+      - name: Install system dependencies
+        run: brew install pkgconf cairo librsvg
       - uses: actions/checkout@v4
       - uses: Swatinem/rust-cache@v2
-      - run: cargo build -p listello-protocol -p listello-surface -p listello-agent
+      - run: cargo build -p listello-protocol -p listello-surface -p listello-ui -p listello-sim
       - run: cargo test -p listello-protocol -p listello-surface

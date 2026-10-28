@@ -4,8 +4,11 @@
 //!
 //! Like `strip_golden`, nothing here draws text: the icons are solid squares sent the way the
 //! agent would send them, and every `Text` command is dropped before rasterising (the expanded
-//! row's "2 windows" would otherwise be one), so the images do not depend on which font
-//! resolved on which machine. The text is asserted on the command list in `dock.rs`.
+//! row's "2 windows" would otherwise be one). The text is asserted on the command list in
+//! `dock.rs`. Text is still *measured*, though -- the expanded row's header is as wide as its
+//! label -- so the font is a fixed file shipped with the tests (`tests/fonts/`) rather than
+//! whatever "sans-serif" resolves to on the machine; another font, or another version of the
+//! same one, moves the boxes by a pixel or two.
 //!
 //! To regenerate after a deliberate rendering change:
 //!
@@ -22,14 +25,15 @@ use listello_surface::{Surface, TextStyle};
 use listello_ui::{render_strip, DockWidget, Sizing, Theme, UiState, Widget};
 use std::rc::Rc;
 
-fn theme() -> Option<Theme> {
-    let font = cairo::FontFace::toy_create(
-        "sans-serif",
-        cairo::FontSlant::Normal,
-        cairo::FontWeight::Normal,
-    )
-    .ok()?;
-    Some(Theme {
+fn theme() -> Theme {
+    let path = concat!(env!("CARGO_MANIFEST_DIR"), "/tests/fonts/Inter-Regular.ttf");
+    // The font ships with the tests, so failing to load it is a broken checkout, not a reason
+    // to skip.
+    let face = freetype::Library::init()
+        .and_then(|lib| lib.new_face(path, 0))
+        .expect("the test font loads");
+    let font = cairo::FontFace::create_from_ft(&face).expect("cairo accepts the test font");
+    Theme {
         text: TextStyle::new(Rc::new(font), 14.0),
         background: Color::BLACK,
         foreground: Color::WHITE,
@@ -37,7 +41,7 @@ fn theme() -> Option<Theme> {
         button_pressed: Color::grey(0.6),
         accent: Color::grey(0.8),
         corner_radius: 8.0,
-    })
+    }
 }
 
 fn window(id: u64, app: &str, active: bool) -> WindowInfo {
@@ -76,10 +80,7 @@ fn state(windows: Vec<WindowInfo>, apps: &[&str]) -> UiState {
 }
 
 fn check(name: &str, dock: &DockWidget, state: &UiState) {
-    let Some(theme) = theme() else {
-        eprintln!("skipping: cairo could not create the toy font");
-        return;
-    };
+    let theme = theme();
     let size = Size::new(400, 60);
     let widgets: [&dyn Widget; 1] = [dock];
     let out = render_strip(&widgets, state, &theme, size.to_rect(), 8.0);

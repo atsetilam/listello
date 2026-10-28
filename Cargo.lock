@@ -1568,6 +1568,7 @@ version = "0.1.0"
 dependencies = [
  "cairo-rs",
  "chrono",
+ "freetype-rs",
  "librsvg-rebind",
  "listello-protocol",
  "listello-surface",

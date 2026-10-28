@@ -16,13 +16,13 @@ const FONT_SIZE: f64 = 23.0;
 
 #[test]
 fn every_text_in_the_example_layout_fits_its_box_and_the_panel() {
-    // The daemon's face (`FONT_TEMPLATE`); fontconfig substitutes when Inter is not installed.
-    let Ok(font) =
-        cairo::FontFace::toy_create("Inter", cairo::FontSlant::Normal, cairo::FontWeight::Normal)
-    else {
-        eprintln!("skipping: cairo could not create the toy font");
-        return;
-    };
+    // The daemon's face (`FONT_TEMPLATE`), from the file shipped with the tests: asking the
+    // machine for "Inter" gets a wider substitute wherever it is not installed.
+    let path = concat!(env!("CARGO_MANIFEST_DIR"), "/tests/fonts/Inter-Regular.ttf");
+    let face = freetype::Library::init()
+        .and_then(|lib| lib.new_face(path, 0))
+        .expect("the test font loads");
+    let font = cairo::FontFace::create_from_ft(&face).expect("cairo accepts the test font");
     let theme = Theme {
         text: TextStyle::new(Rc::new(font), FONT_SIZE),
         background: Color::BLACK,
