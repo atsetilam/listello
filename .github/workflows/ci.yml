@@ -56,7 +56,7 @@ jobs:
             set -eux
             apt-get update -qq
             DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends \
-              build-essential ca-certificates curl pkg-config \
+              build-essential ca-certificates curl pkg-config lld \
               clang libclang-dev qt6-base-dev qt6-declarative-dev \
               libcairo2-dev libdbus-1-dev libfontconfig1-dev libfreetype-dev libgdk-pixbuf-2.0-dev \
               libglib2.0-dev libinput-dev libpipewire-0.3-dev librsvg2-dev libudev-dev
