@@ -1,8 +1,8 @@
 [Desktop Entry]
 Type=Application
 Name=listello
-GenericName=Touch Bar, reimagined
-GenericName[it]=Touch Bar, reimmaginata
+GenericName=Touch Bar Settings
+GenericName[it]=Impostazioni Touch Bar
 Comment=Choose what the Touch Bar shows
 Comment[it]=Scegli cosa mostra la Touch Bar
 Exec=/usr/bin/listello-settings

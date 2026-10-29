@@ -41,7 +41,7 @@ pub fn tr(lang: Lang, key: &str) -> String {
 
 /// (key, English, Italian)
 const STRINGS: &[(&str, &str, &str)] = &[
-    ("window_title", "listello — Touch Bar, reimagined", "listello — Touch Bar, reimmaginata"),
+    ("window_title", "listello", "listello"),
     ("strip", "Strip", "Barra"),
     ("fn_keys", "Fn keys", "Tasti Fn"),
     ("general", "General", "Generale"),

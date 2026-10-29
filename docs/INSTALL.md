@@ -2,9 +2,9 @@
 
 listello is built and tested on **Arch Linux with KDE Plasma (Wayland)** on a MacBookPro16,1
 (T2), using the [t2linux](https://wiki.t2linux.org/) kernel. That is the only combination
-checked on real hardware. Other T2 Macs and Apple Silicon machines share the same panel
-code as [tiny-dfr](https://github.com/AsahiLinux/tiny-dfr) and should work, but have not been
-tried.
+checked on real hardware. Other T2 Macs share the same panel code as
+[tiny-dfr](https://github.com/AsahiLinux/tiny-dfr) and should work. Apple Silicon under Asahi
+Linux builds, but nobody has tried it on a real machine yet.
 
 Coming from tiny-dfr? Read [FROM-TINY-DFR.md](FROM-TINY-DFR.md). Coming from Pock on macOS?
 Read [FROM-POCK.md](FROM-POCK.md).
@@ -45,7 +45,7 @@ makepkg -si
 the build off a small disk, set `BUILDDIR` and `PKGDEST` to somewhere with room (the build
 needs a few GB).
 
-### Debian and Ubuntu: the `.deb`
+### Debian: the `.deb`
 
 The `.deb` is built from a checkout. Debian 13 (trixie) is the release it is built on.
 Other Debian-based systems with Qt 6.8 or newer should work, but have not been tried.
@@ -72,7 +72,8 @@ Debian 13 container (it needs Docker, and takes the same `BUILDDIR` and `PKGDEST
 
 You need Rust (1.92 or newer), a C++ compiler, clang, `pkg-config`, and the development files
 for Qt 6 (Base and Declarative), cairo, D-Bus, fontconfig, freetype, libinput, PipeWire,
-librsvg and libudev. At run time the settings window needs the Kirigami and
+librsvg and libudev. On Apple Silicon (aarch64) you also need `lld`: the build links with it
+there. At run time the settings window needs the Kirigami and
 `qqc2-desktop-style` QML modules and the Inter font.
 
 ```sh
