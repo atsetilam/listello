@@ -61,6 +61,27 @@ work, as they share tiny-dfr's panel code. Apple Silicon under Asahi Linux build
 has tried it on a real machine yet — reports are very welcome. The Dock needs KDE Plasma for
 now; on other desktops the Dock stays empty, and everything else should work.
 
+## What's missing
+
+- **Pock widgets not in listello yet:** Now Playing (what is playing, with play, pause and
+  skip), Weather, the keyboard language in the status area, and Sleep, Screensaver and Do Not
+  Disturb in the control centre.
+- **Sliders.** Brightness and volume are buttons; Pock opens a slider.
+- **Notification badges on Dock icons.** Only some Linux apps report them, so this would be
+  partial at best.
+- **An Escape key.** The 16-inch MacBook Pro has a physical one; the 13- and 15-inch Touch Bar
+  models do not.
+- **Widgets by other people.** Pock can load third-party widgets; listello has no plugin system,
+  and every widget is built in.
+- **The Dock on other desktops.** It needs KDE Plasma; GNOME, Sway, Hyprland and X11 get an
+  empty Dock.
+- **Packages for more systems.** Arch (AUR) and Debian 13 only so far: nothing yet for Fedora,
+  Ubuntu or NixOS, and no ARM `.deb`.
+- **Testing on more Macs.** Only the MacBookPro16,1 has been tried.
+- **More languages.** English and Italian only.
+- **Per-app layouts**, different buttons depending on the app in front. Pock does not do this
+  either, but Apple's own Touch Bar did.
+
 ## Install
 
 On Arch, from the AUR:
