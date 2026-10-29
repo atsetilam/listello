@@ -1491,7 +1491,7 @@ checksum = "32a66949e030da00e8c7d4434b251670a91556f4144941d37452769c25d58a53"
 
 [[package]]
 name = "listello-agent"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "anyhow",
  "cairo-rs",
@@ -1512,7 +1512,7 @@ dependencies = [
 
 [[package]]
 name = "listello-core"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "anyhow",
  "cairo-rs",
@@ -1535,7 +1535,7 @@ dependencies = [
 
 [[package]]
 name = "listello-protocol"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "postcard",
  "serde",
@@ -1543,7 +1543,7 @@ dependencies = [
 
 [[package]]
 name = "listello-settings"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "cairo-rs",
  "chrono",
@@ -1563,7 +1563,7 @@ dependencies = [
 
 [[package]]
 name = "listello-sim"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "anyhow",
  "cairo-rs",
@@ -1576,7 +1576,7 @@ dependencies = [
 
 [[package]]
 name = "listello-surface"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "anyhow",
  "cairo-rs",
@@ -1588,7 +1588,7 @@ dependencies = [
 
 [[package]]
 name = "listello-ui"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "cairo-rs",
  "chrono",

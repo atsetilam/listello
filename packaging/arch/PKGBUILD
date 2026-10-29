@@ -1,8 +1,8 @@
 # Builds listello from the checkout this file sits in (packaging/arch/ inside the repository),
 # not from a downloaded archive: run `makepkg -si` in this directory.
 pkgname=listello
-pkgver=0.1.0
-pkgrel=21
+pkgver=0.1.1
+pkgrel=1
 pkgdesc='Widgets and a Dock for the MacBook Pro Touch Bar, on Linux (a tiny-dfr fork)'
 arch=('x86_64' 'aarch64')
 url='https://github.com/atsetilam/listello'

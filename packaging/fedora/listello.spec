@@ -1,5 +1,5 @@
 Name:           listello
-Version:        0.1.0
+Version:        0.1.1
 Release:        1%{?dist}
 Summary:        Widgets and a Dock for the MacBook Pro Touch Bar
 License:        MIT AND Apache-2.0
@@ -109,5 +109,9 @@ udevadm control --reload >/dev/null 2>&1 || :
 %{_prefix}/lib/udev/rules.d/99-touchbar-seat.rules
 
 %changelog
+* Thu Oct 29 2026 Giulio Malitesta <atsetilam@gmail.com> - 0.1.1-1
+- Tell the user when a newer release exists (a notification, once a day;
+  can be turned off in the settings window).
+
 * Thu Oct 22 2026 Giulio Malitesta <atsetilam@gmail.com> - 0.1.0-1
 - First release.

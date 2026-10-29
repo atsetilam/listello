@@ -1,6 +1,6 @@
 pkgbase = listello-git
 	pkgdesc = Widgets and a Dock for the MacBook Pro Touch Bar, on Linux (a tiny-dfr fork)
-	pkgver = 0.1.0
+	pkgver = 0.1.1
 	pkgrel = 1
 	url = https://github.com/atsetilam/listello
 	install = listello.install
