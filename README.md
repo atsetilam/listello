@@ -77,8 +77,8 @@ now; on other desktops the Dock stays empty, and everything else should work.
   and every widget is built in.
 - **The Dock on other desktops.** It needs KDE Plasma; GNOME, Sway, Hyprland and X11 get an
   empty Dock.
-- **Packages for more systems.** Arch (AUR) and Debian 13 only so far: nothing yet for Fedora,
-  Ubuntu or NixOS, and no ARM `.deb`.
+- **Packages for more systems.** Arch (built from this repository) and Debian 13 only so far:
+  nothing yet in the AUR, nothing for Fedora, Ubuntu or NixOS, and no ARM `.deb`.
 - **Testing on more Macs.** Only the MacBookPro16,1 has been tried.
 - **More languages.** English and Italian only.
 - **Per-app layouts**, different buttons depending on the app in front. Pock does not do this
@@ -86,10 +86,10 @@ now; on other desktops the Dock stays empty, and everything else should work.
 
 ## Install
 
-On Arch, from the AUR:
+On Arch:
 
 ```sh
-git clone https://aur.archlinux.org/listello-git.git && cd listello-git && makepkg -si
+git clone https://github.com/atsetilam/listello && cd listello/packaging/arch && makepkg -si
 ```
 
 Debian (`.deb`), building from source, and the first start: see

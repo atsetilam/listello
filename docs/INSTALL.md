@@ -22,24 +22,15 @@ Read [FROM-POCK.md](FROM-POCK.md).
 Installing listello **turns nothing on**, for anybody. Every route below ends at
 [Turn it on](#turn-it-on).
 
-### Arch Linux: from the AUR
-
-```sh
-git clone https://aur.archlinux.org/listello-git.git
-cd listello-git
-makepkg -si
-```
-
-This builds the latest commit. The package replaces `tiny-dfr` (pacman will offer to remove
-it).
-
-### Arch Linux: from a checkout
+### Arch Linux
 
 ```sh
 git clone https://github.com/atsetilam/listello
 cd listello/packaging/arch
 makepkg -si
 ```
+
+The package replaces `tiny-dfr` (pacman will offer to remove it).
 
 `makepkg` builds under `src/` in that directory and puts the package next to it; to keep
 the build off a small disk, set `BUILDDIR` and `PKGDEST` to somewhere with room (the build
