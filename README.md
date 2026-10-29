@@ -69,8 +69,10 @@ now; on other desktops the Dock stays empty, and everything else should work.
 - **Sliders.** Brightness and volume are buttons; Pock opens a slider.
 - **Notification badges on Dock icons.** Only some Linux apps report them, so this would be
   partial at best.
-- **An Escape key.** The 16-inch MacBook Pro has a physical one; the 13- and 15-inch Touch Bar
-  models do not.
+- **An automatic Escape key.** The 13- and 15-inch Touch Bar models have no physical Esc.
+  tiny-dfr adds one to the strip on those, but listello does not yet, and none of those models
+  has been tested. Until then, add a button that sends Esc in the settings window or the config
+  file (`keys = ["Esc"]`).
 - **Widgets by other people.** Pock can load third-party widgets; listello has no plugin system,
   and every widget is built in.
 - **The Dock on other desktops.** It needs KDE Plasma; GNOME, Sway, Hyprland and X11 get an
