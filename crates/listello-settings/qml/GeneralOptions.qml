@@ -125,6 +125,20 @@ Kirigami.FormLayout {
         checked: (general.rev, settings.sectionBool("general", "tray"))
         onToggled: settings.setSectionBool("general", "tray", checked)
     }
+    QQC2.CheckBox {
+        Kirigami.FormData.label: general.t("updates")
+        text: general.t("updates_check")
+        checked: (general.rev, settings.checkUpdates())
+        onToggled: settings.setCheckUpdates(checked)
+    }
+    QQC2.Label {
+        text: general.t("updates_hint")
+        color: Kirigami.Theme.disabledTextColor
+        font: Kirigami.Theme.smallFont
+        // Explanations wrap at a readable width instead of running past the window's edge.
+        wrapMode: Text.WordWrap
+        Layout.maximumWidth: Kirigami.Units.gridUnit * 30
+    }
     // What the tray offers is here too (D8 amendment). It acts at once: it changes nothing in
     // the file.
     QQC2.Button {

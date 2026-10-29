@@ -5,8 +5,8 @@
 //! user turns it on, and it leaves by itself when they turn it off, since it watches the file.
 //! One per user: a second copy sees the lock taken and leaves.
 //!
-//! The menu is Open settings, Reload listello and Stop listello. Check for updates joins them
-//! when there is a public release to check against (D9); until then it is not shown at all.
+//! The menu is Open settings, Reload listello, Check for updates and Stop listello. Check for
+//! updates asks the agent, which does the looking and shows the answer as a notification (D9).
 //!
 //! The agent starts the tray as its own child (`listello-agent`'s `tray_child`), so it lives and
 //! dies with listello: Stop listello (`lifecycle`) stops the agent's unit and takes the tray
@@ -28,6 +28,7 @@ pub mod ffi {
         fn config_dir_text() -> String;
         fn open_settings();
         fn reload_listello();
+        fn check_for_updates();
         fn stop_listello();
 
         // For the settings window's start-up (`cpp/app.cpp`).
@@ -129,19 +130,30 @@ fn listello_stopped() -> bool {
 /// "Reload listello": the agent passes it on to the renderer (`listello-agent`'s `reload`).
 /// Only the agent's main process, not the apps it started or this tray.
 pub fn reload_listello() {
-    let signalled = Command::new("systemctl")
+    if !signal_agent("SIGUSR1") {
+        eprintln!("listello-settings: could not ask the agent to reload");
+    }
+}
+
+/// "Check for updates": the agent looks now and answers with a notification, whatever the
+/// setting for the automatic check (`listello-agent`'s `updates`).
+pub fn check_for_updates() {
+    if !signal_agent("SIGHUP") {
+        eprintln!("listello-settings: could not ask the agent to check for updates");
+    }
+}
+
+fn signal_agent(signal: &str) -> bool {
+    Command::new("systemctl")
         .args([
             "--user",
             "kill",
             "--kill-whom=main",
-            "--signal=SIGUSR1",
+            &format!("--signal={signal}"),
             "listello-agent.service",
         ])
         .status()
-        .is_ok_and(|s| s.success());
-    if !signalled {
-        eprintln!("listello-settings: could not ask the agent to reload");
-    }
+        .is_ok_and(|s| s.success())
 }
 
 pub fn stop_listello() {

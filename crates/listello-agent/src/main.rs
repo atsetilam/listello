@@ -20,6 +20,7 @@ mod power;
 mod previews;
 mod reload;
 mod tray_child;
+mod updates;
 mod wifi;
 mod windows;
 
@@ -44,12 +45,13 @@ fn main() {
             }
             "--list" => return list_windows(),
             "--capture" => return capture_window(),
+            "--check-updates" => return updates::print_check(),
             _ => {
                 println!(
                     "listello-agent {}\n\n\
                      The session half of listello. Run it as your own user inside your graphical \
                      session; it connects to listello-core by itself and keeps reconnecting.\n\n\
-                     Usage: listello-agent [--version | --list | --capture ID FILE | --help]\n  --list      print the windows the agent can see, then exit\n  --capture   save a picture of one window as PNG, to check previews work",
+                     Usage: listello-agent [--version | --list | --capture ID FILE | --check-updates | --help]\n  --list      print the windows the agent can see, then exit\n  --capture   save a picture of one window as PNG, to check previews work\n  --check-updates  ask GitHub for the latest release and print it",
                     env!("CARGO_PKG_VERSION")
                 );
                 return;
@@ -88,6 +90,10 @@ fn main() {
     let mut link = Reconnecting::default_path();
     let mut tray = tray_child::TrayChild::new();
     tray.sync(user_layout.tray_wanted());
+    let mut updates = updates::Updates::new(
+        desktop::config_dir().map(|d| d.join("listello")),
+        Instant::now(),
+    );
 
     loop {
         // What to wait on: the renderer, the compositor, and the next reconnect attempt.
@@ -98,6 +104,7 @@ fn main() {
         if let Some(until) = agent.until_previews(Instant::now()) {
             timeout = timeout.min(until);
         }
+        timeout = timeout.min(updates.until_due(Instant::now()));
         let mut fds = Vec::new();
         if let Some(fd) = link.fd() {
             let mut flags = PollFlags::POLLIN;
@@ -166,6 +173,10 @@ fn main() {
             let _ = link.send(&listello_protocol::AgentToCore::Quit);
             std::process::exit(0);
         }
+        if reload.take_check() {
+            updates.check_now();
+        }
+        updates.tick(Instant::now());
         if reload_asked {
             if link.is_connected() {
                 eprintln!("listello-agent: reloading the renderer");

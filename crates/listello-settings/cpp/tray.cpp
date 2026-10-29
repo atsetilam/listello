@@ -32,18 +32,21 @@ static QString text(const char *key)
     QMenu menu;
     QAction *open = menu.addAction(QIcon::fromTheme(QStringLiteral("configure")), QString());
     QAction *reload = menu.addAction(QIcon::fromTheme(QStringLiteral("view-refresh")), QString());
+    QAction *updates = menu.addAction(QIcon::fromTheme(QStringLiteral("system-software-update")), QString());
     QAction *stop = menu.addAction(QIcon::fromTheme(QStringLiteral("media-playback-stop")), QString());
     // There is no Start item: stopping listello takes the tray with it, and the application menu
     // starts it again.
-    const auto translate = [open, reload, stop]() {
+    const auto translate = [open, reload, updates, stop]() {
         open->setText(text("tray_open"));
         reload->setText(text("reload"));
+        updates->setText(text("tray_updates"));
         stop->setText(text("stop"));
     };
     translate();
     QObject::connect(&menu, &QMenu::aboutToShow, translate);
     QObject::connect(open, &QAction::triggered, []() { open_settings(); });
     QObject::connect(reload, &QAction::triggered, []() { reload_listello(); });
+    QObject::connect(updates, &QAction::triggered, []() { check_for_updates(); });
     QObject::connect(stop, &QAction::triggered, []() { stop_listello(); });
     // A left click opens the window; the right click shows the menu.
     QObject::connect(&icon, &QSystemTrayIcon::activated, [](QSystemTrayIcon::ActivationReason why) {

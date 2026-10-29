@@ -161,6 +161,13 @@ const STRINGS: &[(&str, &str, &str)] = &[
     ("pixels", "pixels", "pixel"),
     ("tray", "System tray:", "Vassoio di sistema:"),
     ("tray_show", "Show the listello icon", "Mostra l'icona di listello"),
+    ("updates", "Updates:", "Aggiornamenti:"),
+    ("updates_check", "Check for updates", "Cerca aggiornamenti"),
+    (
+        "updates_hint",
+        "About once a day listello asks GitHub whether a newer version exists and tells you. It never downloads or installs anything.",
+        "Circa una volta al giorno listello chiede a GitHub se esiste una versione più recente e te lo dice. Non scarica né installa mai nulla.",
+    ),
     ("reload", "Reload listello", "Ricarica listello"),
     (
         "reload_hint",
@@ -190,6 +197,7 @@ const STRINGS: &[(&str, &str, &str)] = &[
     ("first_no", "Only now", "Solo adesso"),
     // The tray's menu.
     ("tray_open", "Open settings", "Apri impostazioni"),
+    ("tray_updates", "Check for updates", "Cerca aggiornamenti"),
 ];
 
 #[cfg(test)]

@@ -234,8 +234,7 @@ user's session; with no agent it is the machine's `/etc/locale.conf`.
 
 *The tray icon.* Off unless the user turns it on in General. Its menu: **Open settings**,
 **Reload listello** (makes the Touch Bar start over, for when it misbehaves), and **Check for
-updates** — which stays hidden while there is no public release to check against (D9), and
-appears when there is. Everything the tray offers is also in the window.
+updates** (D9, amendment 2026-10-29). Everything the tray offers is also in the window.
 
 **Second amendment 2026-10-22: listello is something a user starts and stops.**
 Seeing the tray, it was decided that listello must be stoppable as a whole, and must not start by
@@ -293,6 +292,25 @@ is gone, since that device only exists after configuration 2.
   gate every change, but a release is something that was used on a Touch Bar.
 - Intended license: MIT (matches both Pock and tiny-dfr; tiny-dfr's embedded
   material-design-icons are Apache-2.0, so a fork must carry both notices).
+
+**Amendment 2026-10-29: listello says when a newer release exists.** There is now a public
+release to compare against. listello checks GitHub's "latest release" about once a day,
+**on by default**; `[general] check_updates = false`, a checkbox in the settings window's
+General page, turns the automatic check off. A newer version is announced by a **desktop
+notification** that names the version and has an action opening the release page in the
+browser. listello never downloads or installs anything. Each newer version is announced once
+by itself (the last one announced is remembered under `$XDG_STATE_HOME/listello/`, beside
+`asked-start-at-login`), so it does not nag daily. The tray's **Check for updates** looks at
+once, whatever the setting, and always answers with a notification: newer, up to date, or that
+it could not check.
+
+The renderer does no networking. The check runs in the user's agent (D11): it already runs at
+login, talks to the session bus and opens things with `xdg-open`. The request and the wait for
+a click happen on a short-lived thread that shares nothing with the event loop and reports
+through files; the first automatic check comes a few minutes after the agent starts, and the
+time of the last attempt is remembered so restarts do not repeat it. A network error, a
+rate limit or an answer that does not parse is logged and otherwise ignored by the automatic
+check. The tray asks the agent with `SIGHUP`, as it asks for a reload with `SIGUSR1`.
 
 ## D10. The simulator is milestone 1
 

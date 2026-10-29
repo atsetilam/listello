@@ -165,6 +165,10 @@ pub mod qobject {
         #[qinvokable]
         fn set_section_bool(self: Pin<&mut Settings>, section: &QString, key: &QString, on: bool);
         #[qinvokable]
+        fn check_updates(self: &Settings) -> bool;
+        #[qinvokable]
+        fn set_check_updates(self: Pin<&mut Settings>, on: bool);
+        #[qinvokable]
         fn reload_listello(self: &Settings);
         #[qinvokable]
         fn stop_listello(self: &Settings);
@@ -779,6 +783,15 @@ impl qobject::Settings {
             .rust_mut()
             .model
             .set_section_bool(&s(section), &s(key), on);
+        self.refresh();
+    }
+
+    fn check_updates(&self) -> bool {
+        self.model.check_updates()
+    }
+
+    fn set_check_updates(mut self: Pin<&mut Self>, on: bool) {
+        self.as_mut().rust_mut().model.set_check_updates(on);
         self.refresh();
     }
 

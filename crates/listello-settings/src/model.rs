@@ -110,8 +110,9 @@ impl Model {
         self.text() != self.saved_text || self.pins != self.saved_pins
     }
 
-    /// Whether Apply would change what the Touch Bar shows. The tray switch lives in the same
-    /// file but is not the Touch Bar's, so a change to it alone does not count.
+    /// Whether Apply would change what the Touch Bar shows. The tray and update-check switches
+    /// live in the same file but are not the Touch Bar's, so a change to them alone does not
+    /// count.
     pub fn changes_touch_bar(&self) -> bool {
         // With no edits at all, Apply on the machine's layout makes it the user's: say so.
         let untouched = self.text() == self.saved_text && self.pins == self.saved_pins;
@@ -436,6 +437,23 @@ impl Model {
         self.drop_empty_section(section);
     }
 
+    /// `[general] check_updates`: on unless the file says `false`.
+    pub fn check_updates(&self) -> bool {
+        self.section_bool("general", "check_updates") != Some(false)
+    }
+
+    /// The one switch that is on by default: turning it off is what the file records, and
+    /// turning it back on removes the line.
+    pub fn set_check_updates(&mut self, on: bool) {
+        let t = self.section_mut("general");
+        if on {
+            t.remove("check_updates");
+        } else if t.get("check_updates").and_then(Item::as_bool) != Some(false) {
+            t.insert("check_updates", value(false));
+        }
+        self.drop_empty_section("general");
+    }
+
     pub fn set_section_f64(&mut self, section: &str, key: &str, number: Option<f64>) {
         set_number_in(self.section_mut(section), key, number);
         self.drop_empty_section(section);
@@ -676,11 +694,12 @@ fn join_list(item: &Item) -> String {
         .unwrap_or_default()
 }
 
-/// The file as values, minus `[general] tray`; `None` when it does not parse.
+/// The file as values, minus `[general] tray` and `check_updates`; `None` when it does not parse.
 fn without_tray(text: &str) -> Option<toml::Table> {
     let mut table: toml::Table = text.parse().ok()?;
     if let Some(general) = table.get_mut("general").and_then(toml::Value::as_table_mut) {
         general.remove("tray");
+        general.remove("check_updates");
         if general.is_empty() {
             table.remove("general");
         }
@@ -804,6 +823,21 @@ active_brightness = 128
         assert!(!m.changes_touch_bar());
         m.set_section_f64("strip", "gap", Some(4.0));
         assert!(m.changes_touch_bar());
+    }
+
+    #[test]
+    fn the_update_check_is_on_until_the_file_says_otherwise() {
+        let mut m = Model::load(setup("updates"));
+        assert!(m.check_updates());
+        m.set_check_updates(false);
+        assert!(!m.check_updates());
+        assert!(m.text().contains("check_updates = false"));
+        assert!(m.is_dirty());
+        m.apply().unwrap();
+        m.set_check_updates(true);
+        assert!(m.check_updates());
+        assert!(!m.text().contains("check_updates"));
+        assert!(!m.changes_touch_bar() || m.text() != m.saved_text);
     }
 
     #[test]

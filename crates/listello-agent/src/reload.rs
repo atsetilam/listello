@@ -6,6 +6,8 @@
 //! `SIGUSR2` is "Stop listello": the agent's unit uses it as its `KillSignal`, so stopping the
 //! unit (or logging out) lets the agent tell the renderer to give the panel back before it goes.
 //!
+//! `SIGHUP` is "Check for updates" from the tray's menu (`updates`).
+//!
 //! The signals arrive through a signalfd, so they are one more descriptor in the single poll
 //! loop.
 
@@ -22,6 +24,7 @@ pub struct Reload {
     fd: Option<SignalFd>,
     last: Option<Instant>,
     quit: bool,
+    check: bool,
 }
 
 impl Reload {
@@ -32,6 +35,7 @@ impl Reload {
         let mut mask = SigSet::empty();
         mask.add(Signal::SIGUSR1);
         mask.add(Signal::SIGUSR2);
+        mask.add(Signal::SIGHUP);
         let fd = mask
             .thread_block()
             .and_then(|()| {
@@ -43,6 +47,7 @@ impl Reload {
             fd,
             last: None,
             quit: false,
+            check: false,
         }
     }
 
@@ -59,6 +64,8 @@ impl Reload {
         while let Ok(Some(info)) = fd.read_signal() {
             if info.ssi_signo == Signal::SIGUSR2 as u32 {
                 self.quit = true;
+            } else if info.ssi_signo == Signal::SIGHUP as u32 {
+                self.check = true;
             } else {
                 asked = true;
             }
@@ -69,6 +76,11 @@ impl Reload {
     /// Whether the agent was told to stop. Call after `asked`, which reads the signals.
     pub fn quit(&self) -> bool {
         self.quit
+    }
+
+    /// Whether an update check was asked for since the last call. Call after `asked`.
+    pub fn take_check(&mut self) -> bool {
+        std::mem::take(&mut self.check)
     }
 
     fn allowed(&mut self, now: Instant) -> bool {
@@ -93,6 +105,7 @@ mod tests {
             fd: None,
             last: None,
             quit: false,
+            check: false,
         };
         let t = Instant::now();
         assert!(reload.allowed(t));

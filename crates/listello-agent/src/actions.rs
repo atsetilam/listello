@@ -106,6 +106,19 @@ impl Spawner {
         )
     }
 
+    /// Wait up to `within` for what was started to exit, so a short-lived helper is not left
+    /// as a zombie by a thread that is about to end.
+    pub fn finish(&mut self, within: std::time::Duration) {
+        let end = std::time::Instant::now() + within;
+        loop {
+            self.reap();
+            if self.children.is_empty() || std::time::Instant::now() >= end {
+                return;
+            }
+            std::thread::sleep(std::time::Duration::from_millis(100));
+        }
+    }
+
     pub fn lock_session(&mut self) -> bool {
         // Done in a moment, so nothing to lose to a restart.
         self.spawn(&["loginctl".to_string(), "lock-session".to_string()], None)

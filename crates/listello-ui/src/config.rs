@@ -135,7 +135,7 @@ pub enum WindowPreviews {
 }
 
 /// `[general]`: settings that are about the user rather than one widget (D8 amendment).
-#[derive(Clone, Debug, Default, PartialEq, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct GeneralConfig {
     #[serde(default)]
@@ -144,6 +144,24 @@ pub struct GeneralConfig {
     /// turns it on. Only the settings app reads it; the renderer has no tray.
     #[serde(default)]
     pub tray: bool,
+    /// Whether the agent looks for a newer release about once a day and says so (D9
+    /// amendment). On unless turned off. Only the agent reads it; the renderer has no network.
+    #[serde(default = "yes")]
+    pub check_updates: bool,
+}
+
+fn yes() -> bool {
+    true
+}
+
+impl Default for GeneralConfig {
+    fn default() -> Self {
+        GeneralConfig {
+            language: Language::default(),
+            tray: false,
+            check_updates: true,
+        }
+    }
 }
 
 /// `[general] language`: the language of the text listello itself puts on the strip — today,
@@ -827,6 +845,18 @@ mod tests {
             let text = format!("[[widget]]\nkind = \"clock\"\nlocale = \"{bad}\"\n");
             assert!(UiConfig::parse(&text).is_err(), "{bad}");
         }
+    }
+
+    #[test]
+    fn update_checks_are_on_unless_turned_off() {
+        let dock = "[[widget]]\nkind = \"clock\"\n";
+        assert!(parse_ok(dock).general.check_updates);
+        assert!(
+            !parse_ok(format!("[general]\ncheck_updates = false\n{dock}"))
+                .general
+                .check_updates
+        );
+        reject(format!("[general]\ncheck_updates = \"no\"\n{dock}"));
     }
 
     #[test]
