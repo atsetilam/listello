@@ -59,6 +59,30 @@ The build needs Rust 1.92 or newer, which Debian 13's own packages are too old f
 On a machine that is not Debian-based, `packaging/debian/docker.sh` does the same inside a
 Debian 13 container (it needs Docker, and takes the same `BUILDDIR` and `PKGDEST`).
 
+### Fedora: the `.rpm`
+
+The `.rpm` is built from a checkout. Fedora 44 is the release it is built on. Other
+Fedora releases with Qt 6.8 or newer should work, but have not been tried.
+
+```sh
+git clone https://github.com/atsetilam/listello
+cd listello
+sudo dnf install rpm-build make gcc-c++ cargo rust clang clang-devel lld \
+  pkgconf-pkg-config qt6-qtbase-devel qt6-qtdeclarative-devel cairo-devel dbus-devel \
+  fontconfig-devel freetype-devel libinput-devel pipewire-devel librsvg2-devel \
+  systemd-devel systemd-rpm-macros
+BUILDDIR=$HOME/listello-build PKGDEST=$HOME/listello-rpm packaging/fedora/build.sh
+sudo dnf install $HOME/listello-rpm/listello-*.rpm
+```
+
+Fedora's own `cargo` is new enough (the build needs Rust 1.92 or newer), and `lld` is
+needed to link the settings window. The build downloads the crates it needs, so it wants the
+network. The package replaces `tiny-dfr` and pulls in the Qt and Kirigami modules the
+settings window uses.
+
+On a machine that is not Fedora, `packaging/fedora/docker.sh` does the same inside a Fedora
+container (it needs Docker, and takes the same `BUILDDIR` and `PKGDEST`).
+
 ### From source, on any distribution
 
 You need Rust (1.92 or newer), a C++ compiler, clang, `pkg-config`, and the development files
